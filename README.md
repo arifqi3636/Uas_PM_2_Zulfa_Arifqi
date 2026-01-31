@@ -1,10 +1,16 @@
-# UAS Catfish - Aplikasi Manajemen Budidaya Ikan Lele 🐟
+# UAS Pemrograman Mobile 2 - Aplikasi Manajemen Budidaya Ikan 🐟
+(Demo Aplikasi)
+
+
+https://github.com/user-attachments/assets/ea9574b4-dee2-4617-bb05-d77cfdc556c3
+
+
 
 > Solusi digital komprehensif untuk manajemen akuakultur ikan lele dengan antarmuka yang intuitif dan fitur-fitur canggih.
 
 ## 📋 Deskripsi Proyek
 
-**UAS Catfish** adalah aplikasi mobile dan web berbasis **Flutter** yang dirancang khusus untuk membantu petani dan pembudidaya ikan lele dalam mengelola operasional budidaya ikan secara efisien dan terintegrasi. Aplikasi ini menggabungkan teknologi modern dengan kebutuhan praktis pengguna di lapangan.
+**Catfish** adalah aplikasi mobile dan web berbasis **Flutter** yang dirancang khusus untuk membantu petani dan pembudidaya ikan lele dalam mengelola operasional budidaya ikan secara efisien dan terintegrasi. Aplikasi ini menggabungkan teknologi modern dengan kebutuhan praktis pengguna di lapangan.
 
 ### 🎯 Tujuan Aplikasi
 - Memudahkan monitoring dan manajemen kolam ikan secara real-time
@@ -18,35 +24,6 @@
 - Pemilik usaha aquakultur
 - Teknisi dan pekerja lapangan
 
-## 🎨 Desain dan Visual
-
-### Palet Warna Profesional
-Aplikasi menggunakan color scheme yang modern, menarik, namun tetap profesional:
-
-| Komponen | Warna | Kode Hex | Fungsi |
-|----------|-------|----------|--------|
-| Primary Green | Hijau Cerah | #27AE60 | AppBar, Primary Button, Tema Utama |
-| Primary Green Dark | Hijau Gelap | #1E8449 | Emphasis, Dark Mode |
-| Primary Green Light | Hijau Muda | #52BE80 | Aksen, Hover States |
-| Accent Blue | Biru | #3498DB | Ikan & Data Air |
-| Accent Orange | Orange | #E67E22 | Pakan & Supplies |
-| Accent Yellow | Kuning | #F1C40F | Panen & Produksi |
-| Accent Brown | Cokelat | #8B6F47 | Elemen Tanah |
-
-### Status Colors
-- 🟢 **Sehat/Healthy** (#27AE60) - Kondisi optimal
-- 🟠 **Moderat/Moderate** (#E67E22) - Perlu perhatian
-- 🔴 **Tidak Sehat/Unhealthy** (#E74C3C) - Kondisi kritis
-
-### Logo & Brand
-Logo aplikasi menampilkan ikon ikan lele dalam lingkaran hijau yang merepresentasikan tema budidaya ikan berkelanjutan. Ditampilkan di:
-- 🔐 Login & Register Screen
-- 📱 Dashboard Header
-- ℹ️ About Section
-
-## ✨ Fitur Utama
-- Alert stok rendah
-
 ## ✨ Fitur Utama
 
 ### 📊 1. Dashboard Analytics
@@ -55,11 +32,7 @@ Layar utama dengan visualisasi data real-time:
 - 📋 **Summary Cards** - Statistik kolam, ikan, pakan, kesehatan
 - ⚠️ **Alert System** - Notifikasi kondisi abnormal (kolam tidak sehat, stok pakan rendah)
 - 📱 **Responsive Design** - Tampilan optimal di semua ukuran layar
-- ✨ **Smooth Animations** - Animasi masuk yang elegan
 
-**Warna Card**:
-- 🟢 Kolam Sehat (Hijau) | 🟠 Kolam Moderat (Orange) | 🔴 Kolam Tidak Sehat (Merah)
-- 🔵 Total Ikan (Biru) | 🟡 Panen (Kuning) | 🟠 Pakan (Orange)
 
 ### 🏊 2. Manajemen Kolam
 Fitur lengkap untuk CRUD kolam:
@@ -122,21 +95,6 @@ Manajemen user account:
 - 📱 **Responsive Settings** - Pengaturan sesuai preferensi
 - 🚪 **Logout** - Keluar dari aplikasi dengan aman
 
-## 🛠️ Teknologi yang Digunakan
-
-| Layer | Teknologi | Fungsi |
-|-------|-----------|--------|
-| **Frontend** | Flutter 3.0+ | Framework cross-platform |
-| **Language** | Dart | Bahasa pemrograman |
-| **UI Kit** | Material Design 3 | Design system |
-| **State Management** | Provider | Manajemen state aplikasi |
-| **Backend** | Firebase | Cloud services |
-| **Authentication** | Firebase Auth | Login & security |
-| **Database** | Firestore | Real-time database |
-| **Charts** | fl_chart | Visualisasi data |
-| **Image Picker** | image_picker | Upload foto |
-| **Date Handling** | intl | Format tanggal |
-| **Local Storage** | SharedPreferences | Preferensi user |
 
 ## 📁 Struktur Proyek
 
@@ -184,117 +142,8 @@ lib/
 └── assets/
     └── logo.svg                        # 🎨 Logo aplikasi
 
-```
 
-## 🎨 Desain dan UX
-
-### Material Design 3
-✅ Modern dan konsisten
-✅ Responsive di berbagai ukuran
-✅ Dark mode support
-✅ Smooth animations & transitions
-
-### Color Psychology
-- 🟢 **Hijau** (Pertanian/Kesehatan) - Primary warna
-- 🔵 **Biru** (Air/Ikan) - Untuk data ikan
-- 🟠 **Orange** (Energi/Pakan) - Untuk manajemen pakan
-- 🟡 **Kuning** (Hasil/Panen) - Untuk data produksi
-- 🔴 **Merah** (Alert) - Untuk kondisi kritis
-
-## 🚀 Persyaratan Sistem
-
-### Minimum Requirements
-- **Flutter SDK**: 3.0 atau lebih baru
-- **Dart SDK**: 3.0 atau lebih baru  
-- **Android**: API level 21+ (untuk Android)
-- **iOS**: iOS 11.0+ (untuk iOS)
-- **RAM**: 2GB minimum
-- **Storage**: 500MB free space
-
-### Development Tools
-- **IDE**: Android Studio, VS Code, atau IntelliJ IDEA
-- **Flutter Plugin**: Untuk IDE pilihan Anda
-- **Git**: Untuk version control
-- **Firebase Account**: Gratis di https://firebase.google.com
-
-## 📥 Instalasi dan Setup
-
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/arifqi3636/Uas_PM.git
-cd uas_catfish
-```
-
-### Step 2: Install Dependencies Flutter
-```bash
-flutter pub get
-```
-
-### Step 3: Setup Firebase
-
-#### Untuk Android:
-1. Buat proyek baru di [Firebase Console](https://console.firebase.google.com)
-2. Tambahkan aplikasi Android:
-   - Package name: `com.example.uas_catfish`
-   - SHA-1 Certificate: Dapatkan dari `flutter run`
-3. Download `google-services.json`
-4. Letakkan file di `android/app/`
-
-#### Untuk iOS:
-1. Download `GoogleService-Info.plist`
-2. Letakkan di `ios/Runner/`
-
-#### Setup Firestore & Authentication:
-3. Di Firebase Console:
-   - ✅ Enable "Email/Password" authentication
-   - ✅ Enable Firestore Database dengan security rules:
    ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /{document=**} {
-         allow read, write: if request.auth != null;
-       }
-     }
-   }
-   ```
-
-### Step 4: Run Aplikasi
-```bash
-# Untuk Android
-flutter run
-
-# Untuk iOS
-flutter run -d ios
-
-# Untuk Web
-flutter run -d chrome
-
-# Untuk Windows
-flutter run -d windows
-```
-
-## 🔨 Build & Release
-
-### Build APK (Android Debug)
-```bash
-flutter build apk --debug
-```
-
-### Build APK Release
-```bash
-flutter build apk --release
-```
-
-### Build iOS
-```bash
-flutter build ios --release
-```
-
-### Build Web
-```bash
-flutter build web --release
-```
 
 ## 📋 Panduan Penggunaan
 
@@ -356,24 +205,6 @@ flutter build web --release
 ✅ **No Password Storage** - Managed oleh Firebase
 ✅ **Session Management** - Auto logout jika idle
 
-## 🎓 Fitur Pembelajaran
-
-Proyek ini memdemonstrasikan:
-- ✅ MVVM Architecture Pattern
-- ✅ State Management dengan Provider
-- ✅ Firebase Integration (Auth + Firestore)
-- ✅ Responsive UI Design
-- ✅ Chart & Data Visualization
-- ✅ Form Validation
-- ✅ Error Handling
-- ✅ Image Picker Integration
-
-## 🐛 Troubleshooting
-
-### Aplikasi tidak connect ke Firebase
-- ✅ Pastikan `google-services.json` di tempat yang benar
-- ✅ Periksa SHA-1 certificate di Firebase Console
-- ✅ Pastikan internet connection aktif
 
 ### Error saat login
 - ✅ Pastikan email belum terdaftar
@@ -393,26 +224,8 @@ Proyek ini memdemonstrasikan:
 - ✅ Smooth 60 FPS animations
 - ✅ Minimal memory footprint
 
-## 🤝 Kontribusi
-
-Jika ingin berkontribusi:
-1. Fork repository
-2. Buat branch baru (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buka Pull Request
 
 ## 📝 Catatan Developer
-
-### Warna untuk berbagai kategori:
-```dart
-// lib/theme/app_theme.dart
-static const Color primaryGreen = Color(0xFF27AE60);      // Tema utama
-static const Color accentBlue = Color(0xFF3498DB);        // Ikan & Air
-static const Color accentOrange = Color(0xFFE67E22);      // Pakan
-static const Color statusHealthy = Color(0xFF27AE60);     // Sehat (Hijau)
-static const Color statusModerate = Color(0xFFE67E22);    // Moderat (Orange)
-static const Color statusUnhealthy = Color(0xFFE74C3C);   // Tidak Sehat (Merah)
 ```
 
 ### Model Struktur Data:
@@ -422,43 +235,8 @@ static const Color statusUnhealthy = Color(0xFFE74C3C);   // Tidak Sehat (Merah)
 // untuk Firebase Firestore serialization
 ```
 
-## 📞 Support & Feedback
-
-Untuk pertanyaan atau feedback:
-- 📧 Email: [your-email]
-- 🐛 Issues: GitHub Issues
-- 💬 Discussions: GitHub Discussions
-
-## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah **MIT License** - lihat file [LICENSE](LICENSE) untuk detail.
-
----
-
-## 🎉 Status Project
-
-| Aspek | Status |
-|-------|--------|
-| Core Features | ✅ Completed |
-| Firebase Integration | ✅ Completed |
-| UI/UX Design | ✅ Completed |
-| Dark/Light Theme | ✅ Completed |
-| Analytics & Charts | ✅ Completed |
-| Mobile Build | ✅ Ready |
-| Web Build | ✅ Ready |
-| Documentation | ✅ Complete |
-
-## 📚 Referensi
-
-- [Flutter Documentation](https://flutter.dev/docs)
-- [Firebase Documentation](https://firebase.google.com/docs)
-- [Material Design 3](https://m3.material.io)
-- [Dart Language](https://dart.dev)
-
----
 
 **Last Updated**: February 2026
 **Version**: 1.0.0
-**Status**: Production Ready ✅
+**Status**: Ready ✅
 
-Terima kasih telah menggunakan **UAS Catfish**! Semoga aplikasi ini membantu optimalisasi budidaya ikan lele Anda. 🐟🌾
