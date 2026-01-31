@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#2E7D32" stroke="#1B5E20" stroke-width="2"/>
+  
+  <!-- Fish body -->
+  <ellipse cx="80" cy="100" rx="35" ry="25" fill="#4CAF50"/>
+  
+  <!-- Fish head -->
+  <circle cx="50" cy="100" r="18" fill="#4CAF50"/>
+  
+  <!-- Fish mouth -->
+  <path d="M 35 100 Q 30 98 32 102" stroke="#1B5E20" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Fish eye -->
+  <circle cx="42" cy="95" r="4" fill="#1B5E20"/>
+  <circle cx="43" cy="94" r="1.5" fill="white"/>
+  
+  <!-- Fish tail -->
+  <path d="M 115 100 L 150 85 L 140 100 L 150 115 Z" fill="#4CAF50" stroke="#1B5E20" stroke-width="1"/>
+  
+  <!-- Fish fin (top) -->
+  <path d="M 85 75 L 95 55 L 90 75 Z" fill="#66BB6A"/>
+  
+  <!-- Fish fin (bottom) -->
+  <path d="M 85 125 L 95 145 L 90 125 Z" fill="#66BB6A"/>
+  
+  <!-- Water waves -->
+  <path d="M 20 150 Q 30 145 40 150 T 60 150" stroke="#1B5E20" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 160 160 Q 170 155 180 160 T 200 160" stroke="#1B5E20" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+</svg>

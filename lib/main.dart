@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'theme/app_theme.dart';
 import 'providers/auth_provider.dart';
+import 'providers/theme_provider.dart';
 import 'providers/pond_provider.dart';
 import 'providers/fish_inventory_provider.dart';
 import 'providers/feed_provider.dart';
@@ -18,9 +20,7 @@ import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => PondProvider()),
         ChangeNotifierProvider(create: (_) => FishInventoryProvider()),
@@ -39,13 +40,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FeedingProvider()),
         ChangeNotifierProvider(create: (_) => HarvestProvider()),
       ],
-      child: MaterialApp(
-        title: 'Sistem Manajemen Budidaya Ikan Lele',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
-        home: const AuthWrapper(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            title: 'Sistem Manajemen Budidaya Ikan Lele',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const AuthWrapper(),
+          );
+        },
       ),
     );
   }
@@ -90,30 +94,24 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pool),
-            label: 'Kolam',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Kolam'),
           BottomNavigationBarItem(
             icon: Icon(Icons.monitor),
             label: 'Monitoring',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report),
-            label: 'Laporan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Laporan'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).colorScheme.onPrimary,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
         onTap: _onItemTapped,
       ),
     );

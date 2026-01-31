@@ -4,7 +4,8 @@ import '../models/feed.dart';
 import '../models/health_monitoring.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://mockapi.example.com'; // Replace with actual mock API
+  static const String baseUrl =
+      'https://mockapi.example.com'; // Replace with actual mock API
 
   Future<List<Pond>> fetchPonds() async {
     // Mock data for now

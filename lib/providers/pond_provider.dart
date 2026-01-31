@@ -15,7 +15,9 @@ class PondProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('ponds').get();
-      _ponds = snapshot.docs.map((doc) => Pond.fromMap(doc.data(), doc.id)).toList();
+      _ponds = snapshot.docs
+          .map((doc) => Pond.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -31,7 +33,8 @@ class PondProvider with ChangeNotifier {
       _ponds.add(pond);
       notifyListeners();
     } catch (e) {
-      // Handle error
+      // Rethrow so callers can react to failures (UI can show errors)
+      rethrow;
     }
   }
 

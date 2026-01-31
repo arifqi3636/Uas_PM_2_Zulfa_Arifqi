@@ -7,7 +7,8 @@ class AddHealthMonitoringScreen extends StatefulWidget {
   const AddHealthMonitoringScreen({super.key});
 
   @override
-  State<AddHealthMonitoringScreen> createState() => _AddHealthMonitoringScreenState();
+  State<AddHealthMonitoringScreen> createState() =>
+      _AddHealthMonitoringScreenState();
 }
 
 class _AddHealthMonitoringScreenState extends State<AddHealthMonitoringScreen> {
@@ -41,7 +42,10 @@ class _AddHealthMonitoringScreenState extends State<AddHealthMonitoringScreen> {
         date: _dateController.text,
         notes: _notesController.text,
       );
-      Provider.of<HealthProvider>(context, listen: false).addMonitoring(monitoring);
+      Provider.of<HealthProvider>(
+        context,
+        listen: false,
+      ).addMonitoring(monitoring);
       Navigator.pop(context);
     }
   }
@@ -51,7 +55,7 @@ class _AddHealthMonitoringScreenState extends State<AddHealthMonitoringScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Monitoring Kesehatan'),
-        backgroundColor: Colors.orange,
+        // backgroundColor: Colors.orange, // Removed inline color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -116,10 +120,7 @@ class _AddHealthMonitoringScreenState extends State<AddHealthMonitoringScreen> {
                 maxLines: 3,
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _save,
-                child: const Text('Simpan'),
-              ),
+              ElevatedButton(onPressed: _save, child: const Text('Simpan')),
             ],
           ),
         ),

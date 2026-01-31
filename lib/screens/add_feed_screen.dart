@@ -51,7 +51,6 @@ class _AddFeedScreenState extends State<AddFeedScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Pakan'),
-        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -122,10 +121,7 @@ class _AddFeedScreenState extends State<AddFeedScreen> {
                 },
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _save,
-                child: const Text('Simpan'),
-              ),
+              ElevatedButton(onPressed: _save, child: const Text('Simpan')),
             ],
           ),
         ),

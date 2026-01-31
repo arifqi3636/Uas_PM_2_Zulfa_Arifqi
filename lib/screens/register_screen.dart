@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -9,7 +10,8 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStateMixin {
+class _RegisterScreenState extends State<RegisterScreen>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -56,16 +58,16 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
           }
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Registration failed: $e')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Registration failed: $e')));
           }
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password tidak cocok')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Password tidak cocok')));
         }
       }
     }
@@ -77,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.green],
+            colors: [AppTheme.primaryGreen, AppTheme.primaryGreenLight],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -98,12 +100,17 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                       children: [
                         const Text(
                           'Daftar Akun Baru',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _nameController,
-                          decoration: const InputDecoration(labelText: 'Nama Lengkap'),
+                          decoration: const InputDecoration(
+                            labelText: 'Nama Lengkap',
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Masukkan nama lengkap';
@@ -119,7 +126,9 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                             if (value == null || value.isEmpty) {
                               return 'Masukkan email';
                             }
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                            if (!RegExp(
+                              r'^[^@]+@[^@]+\.[^@]+',
+                            ).hasMatch(value)) {
                               return 'Email tidak valid';
                             }
                             return null;
@@ -127,7 +136,9 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                         ),
                         TextFormField(
                           controller: _passwordController,
-                          decoration: const InputDecoration(labelText: 'Password'),
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                          ),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -141,7 +152,9 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                         ),
                         TextFormField(
                           controller: _confirmPasswordController,
-                          decoration: const InputDecoration(labelText: 'Konfirmasi Password'),
+                          decoration: const InputDecoration(
+                            labelText: 'Konfirmasi Password',
+                          ),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {

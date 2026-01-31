@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
+import '../widgets/app_logo.dart';
 import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -10,7 +12,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -42,16 +45,16 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   void _login() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await Provider.of<AuthProvider>(context, listen: false).login(
-          _emailController.text,
-          _passwordController.text,
-        );
+        await Provider.of<AuthProvider>(
+          context,
+          listen: false,
+        ).login(_emailController.text, _passwordController.text);
         // Navigation will be handled by AuthWrapper based on auth state
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Login failed: $e')));
         }
       }
     }
@@ -63,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.green],
+            colors: [AppTheme.primaryGreen, AppTheme.accentGreen],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -81,11 +84,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        'Login',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
+                      const AppLogo(size: 80, showText: true),
+                      const SizedBox(height: 30),
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(labelText: 'Email'),
@@ -94,7 +94,9 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                             return 'Please enter email';
                           }
                           // Email validation regex
-                          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          final emailRegex = RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          );
                           if (!emailRegex.hasMatch(value)) {
                             return 'Please enter a valid email address';
                           }
@@ -103,7 +105,9 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                       ),
                       TextFormField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(labelText: 'Password'),
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                        ),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -122,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
                           );
                         },
                         child: const Text('Belum punya akun? Daftar'),

@@ -15,7 +15,9 @@ class FeedingProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('feedings').get();
-      _feedings = snapshot.docs.map((doc) => Feeding.fromMap(doc.data(), doc.id)).toList();
+      _feedings = snapshot.docs
+          .map((doc) => Feeding.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -26,7 +28,9 @@ class FeedingProvider with ChangeNotifier {
 
   Future<void> addFeeding(Feeding feeding) async {
     try {
-      final docRef = await _firestore.collection('feedings').add(feeding.toMap());
+      final docRef = await _firestore
+          .collection('feedings')
+          .add(feeding.toMap());
       feeding.id = docRef.id;
       _feedings.add(feeding);
       notifyListeners();
@@ -37,7 +41,10 @@ class FeedingProvider with ChangeNotifier {
 
   Future<void> updateFeeding(Feeding feeding) async {
     try {
-      await _firestore.collection('feedings').doc(feeding.id).update(feeding.toMap());
+      await _firestore
+          .collection('feedings')
+          .doc(feeding.id)
+          .update(feeding.toMap());
       final index = _feedings.indexWhere((f) => f.id == feeding.id);
       if (index != -1) {
         _feedings[index] = feeding;

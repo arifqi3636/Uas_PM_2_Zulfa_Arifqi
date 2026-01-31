@@ -9,9 +9,7 @@ class PondDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(pond.name),
-      ),
+      appBar: AppBar(title: Text(pond.name)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -26,7 +24,7 @@ class PondDetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Center(
-                  child: Icon(Icons.pool, size: 80, color: Colors.blue),
+                  child: Icon(Icons.water_drop, size: 80, color: Colors.blue),
                 ),
               ),
             ),
@@ -38,10 +36,16 @@ class PondDetailScreen extends StatelessWidget {
             Text('Volume: ${pond.volume.toStringAsFixed(2)} m³'),
             Text('Status: ${pond.status}'),
             const SizedBox(height: 32),
-            const Text('Kualitas Air', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'Kualitas Air',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             // Add quality data here
             const SizedBox(height: 16),
-            const Text('Sampling', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'Sampling',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             // Add sampling data here
           ],
         ),

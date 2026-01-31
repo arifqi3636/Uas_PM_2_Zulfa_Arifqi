@@ -15,7 +15,9 @@ class HealthProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('health_monitorings').get();
-      _monitorings = snapshot.docs.map((doc) => HealthMonitoring.fromMap(doc.data(), doc.id)).toList();
+      _monitorings = snapshot.docs
+          .map((doc) => HealthMonitoring.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -26,7 +28,9 @@ class HealthProvider with ChangeNotifier {
 
   Future<void> addMonitoring(HealthMonitoring monitoring) async {
     try {
-      final docRef = await _firestore.collection('health_monitorings').add(monitoring.toMap());
+      final docRef = await _firestore
+          .collection('health_monitorings')
+          .add(monitoring.toMap());
       monitoring.id = docRef.id;
       _monitorings.add(monitoring);
       notifyListeners();
@@ -37,7 +41,10 @@ class HealthProvider with ChangeNotifier {
 
   Future<void> updateMonitoring(HealthMonitoring monitoring) async {
     try {
-      await _firestore.collection('health_monitorings').doc(monitoring.id).update(monitoring.toMap());
+      await _firestore
+          .collection('health_monitorings')
+          .doc(monitoring.id)
+          .update(monitoring.toMap());
       final index = _monitorings.indexWhere((m) => m.id == monitoring.id);
       if (index != -1) {
         _monitorings[index] = monitoring;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import '../providers/fish_inventory_provider.dart';
 import '../providers/pond_provider.dart';
 import '../models/fish_inventory.dart';
@@ -22,7 +23,10 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<FishInventoryProvider>(context, listen: false).loadInventories();
+      Provider.of<FishInventoryProvider>(
+        context,
+        listen: false,
+      ).loadInventories();
       Provider.of<PondProvider>(context, listen: false).loadPonds();
     });
   }
@@ -36,7 +40,18 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
 
     // Apply filtering
     var filteredInventories = inventories.where((inventory) {
-      final pond = ponds.firstWhere((p) => p.id == inventory.pondId, orElse: () => Pond(id: '', name: 'Unknown', length: 0, width: 0, depth: 0, status: '', imageUrl: ''));
+      final pond = ponds.firstWhere(
+        (p) => p.id == inventory.pondId,
+        orElse: () => Pond(
+          id: '',
+          name: 'Unknown',
+          length: 0,
+          width: 0,
+          depth: 0,
+          status: '',
+          imageUrl: '',
+        ),
+      );
       bool pondMatch = _filterPond == 'all' || pond.id == _filterPond;
       bool statusMatch = _filterStatus == 'all' || pond.status == _filterStatus;
       return pondMatch && statusMatch;
@@ -62,7 +77,6 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventory Ikan'),
-        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -84,11 +98,21 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: _buildSummaryCard('Total Ikan', filteredInventories.fold(0, (sum, inv) => sum + inv.quantity).toString(), Icons.set_meal),
+                        child: _buildSummaryCard(
+                          'Total Ikan',
+                          filteredInventories
+                              .fold(0, (sum, inv) => sum + inv.quantity)
+                              .toString(),
+                          Icons.set_meal,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: _buildSummaryCard('Berat Rata-rata', '${(filteredInventories.isEmpty ? 0 : filteredInventories.fold(0.0, (sum, inv) => sum + inv.averageWeight) / filteredInventories.length).toStringAsFixed(1)}kg', Icons.monitor_weight),
+                        child: _buildSummaryCard(
+                          'Berat Rata-rata',
+                          '${(filteredInventories.isEmpty ? 0 : filteredInventories.fold(0.0, (sum, inv) => sum + inv.averageWeight) / filteredInventories.length).toStringAsFixed(1)}kg',
+                          Icons.monitor_weight,
+                        ),
                       ),
                     ],
                   ),
@@ -99,60 +123,80 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
                     itemCount: filteredInventories.length,
                     itemBuilder: (context, index) {
                       final inventory = filteredInventories[index];
-                      final pond = ponds.firstWhere((p) => p.id == inventory.pondId, orElse: () => Pond(id: '', name: 'Unknown', length: 0, width: 0, depth: 0, status: '', imageUrl: ''));
+                      final pond = ponds.firstWhere(
+                        (p) => p.id == inventory.pondId,
+                        orElse: () => Pond(
+                          id: '',
+                          name: 'Unknown',
+                          length: 0,
+                          width: 0,
+                          depth: 0,
+                          status: '',
+                          imageUrl: '',
+                        ),
+                      );
 
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                         margin: const EdgeInsets.only(bottom: 16),
                         child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blue.shade100,
-                        child: const Icon(Icons.inventory, color: Colors.blue),
-                      ),
-                      title: Text('Kolam: ${pond.name}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Jumlah: ${inventory.quantity} ekor'),
-                          Text('Berat Rata-rata: ${inventory.averageWeight} kg'),
-                          Text('Tanggal: ${inventory.date}'),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          inventoryProvider.deleteInventory(inventory.id);
-                        },
-                      ),
-                      onTap: () {
-                        // Edit functionality can be added here
-                      },
-                    ),
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(16),
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                              child: Icon(
+                                Icons.inventory,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            title: Text('Kolam: ${pond.name}'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Jumlah: ${inventory.quantity} ekor'),
+                                Text(
+                                  'Berat Rata-rata: ${inventory.averageWeight} kg',
+                                ),
+                                Text('Tanggal: ${inventory.date}'),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                              onPressed: () {
+                                inventoryProvider.deleteInventory(inventory.id);
+                              },
+                            ),
+                            onTap: () {
+                              // Edit functionality can be added here
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddInventoryDialog(context, inventoryProvider, ponds);
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddInventoryDialog(BuildContext context, FishInventoryProvider inventoryProvider, List<Pond> ponds) {
+  void _showAddInventoryDialog(
+    BuildContext context,
+    FishInventoryProvider inventoryProvider,
+    List<Pond> ponds,
+  ) {
     final formKey = GlobalKey<FormState>();
     String selectedPondId = ponds.isNotEmpty ? ponds.first.id : '';
     int quantity = 0;
@@ -170,21 +214,32 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
-                  value: selectedPondId,
-                  items: ponds.map((pond) => DropdownMenuItem(value: pond.id, child: Text(pond.name))).toList(),
+                  initialValue: selectedPondId,
+                  items: ponds
+                      .map(
+                        (pond) => DropdownMenuItem(
+                          value: pond.id,
+                          child: Text(pond.name),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (value) => selectedPondId = value!,
                   decoration: const InputDecoration(labelText: 'Kolam'),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Jumlah (ekor)'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Jumlah harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Jumlah harus diisi' : null,
                   onSaved: (value) => quantity = int.parse(value!),
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Berat Rata-rata (kg)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Berat Rata-rata (kg)',
+                  ),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Berat rata-rata harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Berat rata-rata harus diisi' : null,
                   onSaved: (value) => averageWeight = double.parse(value!),
                 ),
                 TextFormField(
@@ -197,7 +252,10 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
@@ -223,15 +281,13 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
   Widget _buildSummaryCard(String title, String value, IconData icon) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: const LinearGradient(
-            colors: [Colors.blue, Colors.lightBlue],
+            colors: [AppTheme.primaryGreen, AppTheme.primaryGreenLight],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -242,12 +298,13 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-            Text(
-              title,
-              style: const TextStyle(color: Colors.white),
-            ),
+            Text(title, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),
@@ -263,27 +320,35 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: _filterPond,
+              initialValue: _filterPond,
               decoration: const InputDecoration(labelText: 'Kolam'),
               items: [
-                const DropdownMenuItem(value: 'all', child: Text('Semua Kolam')),
-                ...ponds.map((pond) => DropdownMenuItem(
-                      value: pond.id,
-                      child: Text(pond.name),
-                    )),
+                const DropdownMenuItem(
+                  value: 'all',
+                  child: Text('Semua Kolam'),
+                ),
+                ...ponds.map(
+                  (pond) =>
+                      DropdownMenuItem(value: pond.id, child: Text(pond.name)),
+                ),
               ],
-              onChanged: (value) => setState(() => _filterPond = value ?? 'all'),
+              onChanged: (value) =>
+                  setState(() => _filterPond = value ?? 'all'),
             ),
             DropdownButtonFormField<String>(
-              value: _filterStatus,
+              initialValue: _filterStatus,
               decoration: const InputDecoration(labelText: 'Status Kolam'),
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('Semua Status')),
                 DropdownMenuItem(value: 'healthy', child: Text('Sehat')),
                 DropdownMenuItem(value: 'moderate', child: Text('Moderat')),
-                DropdownMenuItem(value: 'unhealthy', child: Text('Tidak Sehat')),
+                DropdownMenuItem(
+                  value: 'unhealthy',
+                  child: Text('Tidak Sehat'),
+                ),
               ],
-              onChanged: (value) => setState(() => _filterStatus = value ?? 'all'),
+              onChanged: (value) =>
+                  setState(() => _filterStatus = value ?? 'all'),
             ),
           ],
         ),
@@ -327,7 +392,8 @@ class _FishInventoryScreenState extends State<FishInventoryScreen> {
             CheckboxListTile(
               title: const Text('Urutkan Naik'),
               value: _sortAscending,
-              onChanged: (value) => setState(() => _sortAscending = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _sortAscending = value ?? false),
             ),
           ],
         ),

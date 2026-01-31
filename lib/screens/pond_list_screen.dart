@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import '../providers/pond_provider.dart';
 import '../models/pond.dart';
 
@@ -22,13 +23,13 @@ class _PondListScreenState extends State<PondListScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'healthy':
-        return Colors.green;
+        return AppTheme.statusHealthy;
       case 'moderate':
-        return Colors.orange;
+        return AppTheme.statusModerate;
       case 'unhealthy':
-        return Colors.red;
+        return AppTheme.statusUnhealthy;
       default:
-        return Colors.grey;
+        return AppTheme.textLight;
     }
   }
 
@@ -40,7 +41,6 @@ class _PondListScreenState extends State<PondListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Kolam'),
-        backgroundColor: Colors.blue,
       ),
       body: pondProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -61,15 +61,17 @@ class _PondListScreenState extends State<PondListScreen> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(16),
                       leading: CircleAvatar(
-                        backgroundColor: Colors.blue.shade100,
-                        child: const Icon(Icons.pool, color: Colors.blue),
+                        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                        child: Icon(Icons.water_drop, color: Theme.of(context).colorScheme.primary),
                       ),
                       title: Text(pond.name),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Volume: ${pond.volume.toStringAsFixed(2)} m³'),
-                          Text('Ukuran: ${pond.length.toStringAsFixed(1)}m x ${pond.width.toStringAsFixed(1)}m x ${pond.depth.toStringAsFixed(1)}m'),
+                          Text(
+                            'Ukuran: ${pond.length.toStringAsFixed(1)}m x ${pond.width.toStringAsFixed(1)}m x ${pond.depth.toStringAsFixed(1)}m',
+                          ),
                           Text('Status: ${pond.status}'),
                         ],
                       ),
@@ -85,7 +87,7 @@ class _PondListScreenState extends State<PondListScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                             onPressed: () {
                               pondProvider.deletePond(pond.id);
                             },
@@ -104,7 +106,7 @@ class _PondListScreenState extends State<PondListScreen> {
         onPressed: () {
           _showAddPondDialog(context, pondProvider);
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
@@ -132,30 +134,35 @@ class _PondListScreenState extends State<PondListScreen> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(labelText: 'Nama Kolam'),
-                  validator: (value) => value!.isEmpty ? 'Nama kolam harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Nama kolam harus diisi' : null,
                 ),
                 TextFormField(
                   controller: lengthController,
                   decoration: const InputDecoration(labelText: 'Panjang (m)'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Panjang harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Panjang harus diisi' : null,
                 ),
                 TextFormField(
                   controller: widthController,
                   decoration: const InputDecoration(labelText: 'Lebar (m)'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Lebar harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Lebar harus diisi' : null,
                 ),
                 TextFormField(
                   controller: depthController,
                   decoration: const InputDecoration(labelText: 'Kedalaman (m)'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Kedalaman harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Kedalaman harus diisi' : null,
                 ),
                 TextFormField(
                   controller: statusController,
                   decoration: const InputDecoration(labelText: 'Status'),
-                  validator: (value) => value!.isEmpty ? 'Status harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Status harus diisi' : null,
                 ),
                 TextFormField(
                   controller: imageUrlController,
@@ -166,21 +173,35 @@ class _PondListScreenState extends State<PondListScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
             onPressed: () {
-              if (formKey.currentState!.validate()) {
+              if (!formKey.currentState!.validate()) return;
+              try {
+                double parse(String v) {
+                  final normalized = v.replaceAll(',', '.').trim();
+                  return double.parse(normalized);
+                }
+
                 final pond = Pond(
                   id: '',
                   name: nameController.text,
-                  length: double.parse(lengthController.text),
-                  width: double.parse(widthController.text),
-                  depth: double.parse(depthController.text),
+                  length: parse(lengthController.text),
+                  width: parse(widthController.text),
+                  depth: parse(depthController.text),
                   status: statusController.text,
                   imageUrl: imageUrlController.text,
                 );
                 pondProvider.addPond(pond);
                 Navigator.pop(context);
+              } catch (e) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Nilai panjang/ lebar/ kedalaman tidak valid')),
+                );
               }
             },
             child: const Text('Simpan'),
@@ -190,7 +211,11 @@ class _PondListScreenState extends State<PondListScreen> {
     );
   }
 
-  void _showEditPondDialog(BuildContext context, PondProvider pondProvider, Pond pond) {
+  void _showEditPondDialog(
+    BuildContext context,
+    PondProvider pondProvider,
+    Pond pond,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

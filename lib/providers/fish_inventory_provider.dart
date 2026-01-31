@@ -15,7 +15,9 @@ class FishInventoryProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('fish_inventories').get();
-      _inventories = snapshot.docs.map((doc) => FishInventory.fromMap(doc.data(), doc.id)).toList();
+      _inventories = snapshot.docs
+          .map((doc) => FishInventory.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -26,7 +28,9 @@ class FishInventoryProvider with ChangeNotifier {
 
   Future<void> addInventory(FishInventory inventory) async {
     try {
-      final docRef = await _firestore.collection('fish_inventories').add(inventory.toMap());
+      final docRef = await _firestore
+          .collection('fish_inventories')
+          .add(inventory.toMap());
       inventory.id = docRef.id;
       _inventories.add(inventory);
       notifyListeners();
@@ -37,7 +41,10 @@ class FishInventoryProvider with ChangeNotifier {
 
   Future<void> updateInventory(FishInventory inventory) async {
     try {
-      await _firestore.collection('fish_inventories').doc(inventory.id).update(inventory.toMap());
+      await _firestore
+          .collection('fish_inventories')
+          .doc(inventory.id)
+          .update(inventory.toMap());
       final index = _inventories.indexWhere((i) => i.id == inventory.id);
       if (index != -1) {
         _inventories[index] = inventory;

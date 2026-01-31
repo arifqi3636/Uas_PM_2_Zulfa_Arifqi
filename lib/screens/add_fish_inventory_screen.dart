@@ -35,7 +35,10 @@ class _AddFishInventoryScreenState extends State<AddFishInventoryScreen> {
         averageWeight: double.parse(_averageWeightController.text),
         date: _dateController.text,
       );
-      Provider.of<FishInventoryProvider>(context, listen: false).addInventory(inventory);
+      Provider.of<FishInventoryProvider>(
+        context,
+        listen: false,
+      ).addInventory(inventory);
       Navigator.pop(context);
     }
   }
@@ -45,7 +48,6 @@ class _AddFishInventoryScreenState extends State<AddFishInventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Inventory Ikan'),
-        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -76,7 +78,9 @@ class _AddFishInventoryScreenState extends State<AddFishInventoryScreen> {
               ),
               TextFormField(
                 controller: _averageWeightController,
-                decoration: const InputDecoration(labelText: 'Berat Rata-rata (kg)'),
+                decoration: const InputDecoration(
+                  labelText: 'Berat Rata-rata (kg)',
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -96,10 +100,7 @@ class _AddFishInventoryScreenState extends State<AddFishInventoryScreen> {
                 },
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _save,
-                child: const Text('Simpan'),
-              ),
+              ElevatedButton(onPressed: _save, child: const Text('Simpan')),
             ],
           ),
         ),

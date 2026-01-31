@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import '../providers/harvest_provider.dart';
 import '../providers/pond_provider.dart';
@@ -39,8 +40,14 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     }).toList();
 
     // Calculate harvest analytics
-    double totalHarvest = filteredHarvests.fold(0.0, (sum, h) => sum + h.weight);
-    double totalValue = filteredHarvests.fold(0.0, (sum, h) => sum + (h.weight * h.pricePerKg));
+    double totalHarvest = filteredHarvests.fold(
+      0.0,
+      (sum, h) => sum + h.weight,
+    );
+    double totalValue = filteredHarvests.fold(
+      0.0,
+      (sum, h) => sum + (h.weight * h.pricePerKg),
+    );
     int totalHarvests = filteredHarvests.length;
     double averageYield = totalHarvests > 0 ? totalHarvest / totalHarvests : 0;
     double averagePrice = totalHarvests > 0 ? totalValue / totalHarvest : 0;
@@ -48,7 +55,8 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     // Productivity analysis
     Map<String, double> pondProductivity = {};
     for (var harvest in filteredHarvests) {
-      pondProductivity[harvest.pondId] = (pondProductivity[harvest.pondId] ?? 0) + harvest.weight;
+      pondProductivity[harvest.pondId] =
+          (pondProductivity[harvest.pondId] ?? 0) + harvest.weight;
     }
 
     // Forecasting (simple linear trend)
@@ -57,7 +65,6 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Data Panen'),
-        backgroundColor: Colors.purple,
         actions: [
           IconButton(
             icon: Icon(_showAnalytics ? Icons.list : Icons.analytics),
@@ -81,11 +88,19 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Total Panen', '${totalHarvest.toStringAsFixed(1)}kg', Icons.agriculture, Colors.purple),
+                            child: _buildSummaryCard(
+                                'Total Panen',
+                                '${totalHarvest.toStringAsFixed(1)}kg',
+                                Icons.agriculture,
+                              ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Total Nilai', 'Rp${totalValue.toStringAsFixed(0)}', Icons.monetization_on, Colors.green),
+                            child: _buildSummaryCard(
+                              'Total Nilai',
+                              'Rp${totalValue.toStringAsFixed(0)}',
+                              Icons.monetization_on,
+                            ),
                           ),
                         ],
                       ),
@@ -93,11 +108,19 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Rata-rata Hasil', '${averageYield.toStringAsFixed(1)}kg', Icons.trending_up, Colors.blue),
+                            child: _buildSummaryCard(
+                              'Rata-rata Hasil',
+                              '${averageYield.toStringAsFixed(1)}kg',
+                              Icons.trending_up,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Harga Rata-rata', 'Rp${averagePrice.toStringAsFixed(0)}/kg', Icons.attach_money, Colors.orange),
+                            child: _buildSummaryCard(
+                              'Harga Rata-rata',
+                              'Rp${averagePrice.toStringAsFixed(0)}/kg',
+                              Icons.attach_money,
+                            ),
                           ),
                         ],
                       ),
@@ -105,11 +128,19 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Forecast Bulan Depan', '${forecastYield.toStringAsFixed(1)}kg', Icons.timeline, Colors.teal),
+                            child: _buildSummaryCard(
+                              'Forecast Bulan Depan',
+                              '${forecastYield.toStringAsFixed(1)}kg',
+                              Icons.timeline,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Kolam Produktif', pondProductivity.length.toString(), Icons.pool, Colors.indigo),
+                            child: _buildSummaryCard(
+                              'Kolam Produktif',
+                              pondProductivity.length.toString(),
+                              Icons.water_drop,
+                            ),
                           ),
                         ],
                       ),
@@ -118,7 +149,9 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                 ),
 
                 Expanded(
-                  child: _showAnalytics ? _buildAnalyticsView(pondProductivity, ponds) : _buildHarvestList(filteredHarvests, ponds),
+                  child: _showAnalytics
+                      ? _buildAnalyticsView(pondProductivity, ponds)
+                      : _buildHarvestList(filteredHarvests, ponds),
                 ),
               ],
             ),
@@ -126,7 +159,7 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
         onPressed: () {
           _showAddHarvestDialog(context, harvestProvider, ponds);
         },
-        backgroundColor: Colors.purple,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
@@ -138,7 +171,18 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
       itemCount: filteredHarvests.length,
       itemBuilder: (context, index) {
         final harvest = filteredHarvests[index];
-        final pond = ponds.firstWhere((p) => p.id == harvest.pondId, orElse: () => Pond(id: '', name: 'Unknown', length: 0, width: 0, depth: 0, status: '', imageUrl: ''));
+        final pond = ponds.firstWhere(
+          (p) => p.id == harvest.pondId,
+          orElse: () => Pond(
+            id: '',
+            name: 'Unknown',
+            length: 0,
+            width: 0,
+            depth: 0,
+            status: '',
+            imageUrl: '',
+          ),
+        );
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
@@ -162,14 +206,20 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                   Text('Berat: ${harvest.weight} ${harvest.unit}'),
                   Text('Harga per kg: Rp ${harvest.pricePerKg}'),
                   Text('Total Nilai: Rp ${harvest.totalValue}'),
-                  Text('Tanggal: ${DateFormat('dd/MM/yyyy').format(harvest.date)}'),
-                  if (harvest.notes.isNotEmpty) Text('Catatan: ${harvest.notes}'),
+                  Text(
+                    'Tanggal: ${DateFormat('dd/MM/yyyy').format(harvest.date)}',
+                  ),
+                  if (harvest.notes.isNotEmpty)
+                    Text('Catatan: ${harvest.notes}'),
                 ],
               ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
-                  Provider.of<HarvestProvider>(context, listen: false).deleteHarvest(harvest.id);
+                  Provider.of<HarvestProvider>(
+                    context,
+                    listen: false,
+                  ).deleteHarvest(harvest.id);
                 },
               ),
               onTap: () {
@@ -182,7 +232,11 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     );
   }
 
-  void _showAddHarvestDialog(BuildContext context, HarvestProvider harvestProvider, List<Pond> ponds) {
+  void _showAddHarvestDialog(
+    BuildContext context,
+    HarvestProvider harvestProvider,
+    List<Pond> ponds,
+  ) {
     final formKey = GlobalKey<FormState>();
     String selectedPondId = ponds.isNotEmpty ? ponds.first.id : '';
     double weight = 0;
@@ -203,14 +257,22 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
               children: [
                 DropdownButtonFormField<String>(
                   initialValue: selectedPondId,
-                  items: ponds.map((pond) => DropdownMenuItem(value: pond.id, child: Text(pond.name))).toList(),
+                  items: ponds
+                      .map(
+                        (pond) => DropdownMenuItem(
+                          value: pond.id,
+                          child: Text(pond.name),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (value) => selectedPondId = value!,
                   decoration: const InputDecoration(labelText: 'Kolam'),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Berat'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Berat harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Berat harus diisi' : null,
                   onSaved: (value) => weight = double.parse(value!),
                 ),
                 TextFormField(
@@ -221,7 +283,8 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Harga per kg'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Harga harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Harga harus diisi' : null,
                   onSaved: (value) => pricePerKg = double.parse(value!),
                 ),
                 TextFormField(
@@ -233,7 +296,10 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
@@ -258,18 +324,22 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     );
   }
 
-  Widget _buildSummaryCard(String title, String value, IconData icon, Color color) {
+  Widget _buildSummaryCard(
+    String title,
+    String value,
+    IconData icon,
+    [Color? color]
+  ) {
+    final col = color ?? AppTheme.primaryGreen;
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [color.withValues(alpha: 0.7), color],
+            colors: [col.withOpacity(0.7), col],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -280,7 +350,11 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Text(
               title,
@@ -300,13 +374,31 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
-          'Analisis Produktivitas Kolam',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Icon(Icons.agriculture, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 8),
+            const Text(
+              'Analisis Produktivitas Kolam',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         ...sortedPonds.map((entry) {
-          final pond = ponds.firstWhere((p) => p.id == entry.key, orElse: () => Pond(id: '', name: 'Unknown', length: 0, width: 0, depth: 0, status: '', imageUrl: ''));
+          final pond = ponds.firstWhere(
+            (p) => p.id == entry.key,
+            orElse: () => Pond(
+              id: '',
+              name: 'Unknown',
+              length: 0,
+              width: 0,
+              depth: 0,
+              status: '',
+              imageUrl: '',
+            ),
+          );
+
           return Card(
             elevation: 4,
             margin: const EdgeInsets.only(bottom: 8),
@@ -316,10 +408,14 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
                 child: Text('${sortedPonds.indexOf(entry) + 1}'),
               ),
               title: Text(pond.name),
-              subtitle: Text('Total Panen: ${entry.value.toStringAsFixed(1)}kg'),
+              subtitle: Text(
+                'Total Panen: ${entry.value.toStringAsFixed(1)}kg',
+              ),
               trailing: Icon(
                 Icons.star,
-                color: sortedPonds.indexOf(entry) < 3 ? Colors.amber : Colors.grey,
+                color: sortedPonds.indexOf(entry) < 3
+                    ? Colors.amber
+                    : Colors.grey,
               ),
             ),
           );
@@ -337,7 +433,9 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('• Optimalkan pemberian pakan berdasarkan produktivitas kolam'),
+                Text(
+                  '• Optimalkan pemberian pakan berdasarkan produktivitas kolam',
+                ),
                 Text('• Lakukan rotasi kolam untuk istirahat tanah'),
                 Text('• Monitor kualitas air secara berkala'),
                 Text('• Tingkatkan frekuensi panen untuk kolam produktif'),
@@ -381,14 +479,14 @@ class _HarvestDataScreenState extends State<HarvestDataScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Filter Data Panen'),
         content: DropdownButtonFormField<String>(
-          value: _filterPond,
+          initialValue: _filterPond,
           decoration: const InputDecoration(labelText: 'Kolam'),
           items: [
             const DropdownMenuItem(value: 'all', child: Text('Semua Kolam')),
-            ...ponds.map((pond) => DropdownMenuItem(
-                  value: pond.id,
-                  child: Text(pond.name),
-                )),
+            ...ponds.map(
+              (pond) =>
+                  DropdownMenuItem(value: pond.id, child: Text(pond.name)),
+            ),
           ],
           onChanged: (value) => setState(() => _filterPond = value ?? 'all'),
         ),

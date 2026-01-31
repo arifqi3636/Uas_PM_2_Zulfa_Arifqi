@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import '../providers/feed_provider.dart';
 import '../models/feed.dart';
 
@@ -51,14 +52,19 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
     });
 
     // Calculate statistics
-    double totalStock = filteredFeeds.fold(0.0, (sum, feed) => sum + feed.quantity);
-    double totalValue = filteredFeeds.fold(0.0, (sum, feed) => sum + (feed.quantity * feed.price));
+    double totalStock = filteredFeeds.fold(
+      0.0,
+      (sum, feed) => sum + feed.quantity,
+    );
+    double totalValue = filteredFeeds.fold(
+      0.0,
+      (sum, feed) => sum + (feed.quantity * feed.price),
+    );
     int uniqueTypes = filteredFeeds.map((f) => f.type).toSet().length;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manajemen Pakan'),
-        backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -82,11 +88,19 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Total Stok', '${totalStock.toStringAsFixed(1)}kg', Icons.inventory, Colors.green),
+                            child: _buildSummaryCard(
+                              'Total Stok',
+                              '${totalStock.toStringAsFixed(1)}kg',
+                              Icons.inventory,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Total Nilai', 'Rp${totalValue.toStringAsFixed(0)}', Icons.attach_money, Colors.orange),
+                            child: _buildSummaryCard(
+                              'Total Nilai',
+                              'Rp${totalValue.toStringAsFixed(0)}',
+                              Icons.attach_money,
+                            ),
                           ),
                         ],
                       ),
@@ -94,11 +108,19 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Jenis Pakan', uniqueTypes.toString(), Icons.category, Colors.blue),
+                            child: _buildSummaryCard(
+                              'Jenis Pakan',
+                              uniqueTypes.toString(),
+                              Icons.category,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Rata-rata Harga', 'Rp${(filteredFeeds.isEmpty ? 0 : totalValue / totalStock).toStringAsFixed(0)}/kg', Icons.trending_up, Colors.purple),
+                            child: _buildSummaryCard(
+                              'Rata-rata Harga',
+                              'Rp${(filteredFeeds.isEmpty ? 0 : totalValue / totalStock).toStringAsFixed(0)}/kg',
+                              Icons.trending_up,
+                            ),
                           ),
                         ],
                       ),
@@ -116,48 +138,53 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
                         curve: Curves.easeInOut,
                         margin: const EdgeInsets.only(bottom: 16),
                         child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.green.shade100,
-                        child: const Icon(Icons.restaurant, color: Colors.green),
-                      ),
-                      title: Text(feed.name),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Tipe: ${feed.type}'),
-                          Text('Jumlah: ${feed.quantity} ${feed.unit}'),
-                          Text('Harga: Rp ${feed.price}'),
-                          Text('Tanggal: ${feed.date}'),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          provider.deleteFeed(feed.id);
-                        },
-                      ),
-                      onTap: () {
-                        // Edit functionality can be added here
-                      },
-                    ),
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(16),
+                            leading: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                              child: Icon(
+                                Icons.restaurant,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            title: Text(feed.name),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Tipe: ${feed.type}'),
+                                Text('Jumlah: ${feed.quantity} ${feed.unit}'),
+                                Text('Harga: Rp ${feed.price}'),
+                                Text('Tanggal: ${feed.date}'),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete,
+                                  color: Theme.of(context).colorScheme.error),
+                              onPressed: () {
+                                provider.deleteFeed(feed.id);
+                              },
+                            ),
+                            onTap: () {
+                              // Edit functionality can be added here
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddFeedDialog(context, provider);
         },
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
@@ -170,7 +197,9 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
     final quantityController = TextEditingController();
     final unitController = TextEditingController();
     final priceController = TextEditingController();
-    final dateController = TextEditingController(text: DateTime.now().toString().split(' ')[0]);
+    final dateController = TextEditingController(
+      text: DateTime.now().toString().split(' ')[0],
+    );
 
     showDialog(
       context: context,
@@ -185,55 +214,111 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(labelText: 'Nama Pakan'),
-                  validator: (value) => value!.isEmpty ? 'Nama pakan harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Nama pakan harus diisi' : null,
                 ),
                 TextFormField(
                   controller: typeController,
                   decoration: const InputDecoration(labelText: 'Tipe'),
-                  validator: (value) => value!.isEmpty ? 'Tipe harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Tipe harus diisi' : null,
                 ),
                 TextFormField(
                   controller: quantityController,
                   decoration: const InputDecoration(labelText: 'Jumlah'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Jumlah harus diisi' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Jumlah harus diisi';
+                    }
+                    final normalized = value.replaceAll(',', '.').trim();
+                    try {
+                      double.parse(normalized);
+                      return null;
+                    } catch (e) {
+                      return 'Jumlah harus berupa angka';
+                    }
+                  },
                 ),
                 TextFormField(
                   controller: unitController,
                   decoration: const InputDecoration(labelText: 'Satuan'),
-                  validator: (value) => value!.isEmpty ? 'Satuan harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Satuan harus diisi' : null,
                 ),
                 TextFormField(
                   controller: priceController,
                   decoration: const InputDecoration(labelText: 'Harga'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Harga harus diisi' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Harga harus diisi';
+                    }
+                    final normalized = value.replaceAll(',', '.').trim();
+                    try {
+                      double.parse(normalized);
+                      return null;
+                    } catch (e) {
+                      return 'Harga harus berupa angka';
+                    }
+                  },
                 ),
                 TextFormField(
                   controller: dateController,
                   decoration: const InputDecoration(labelText: 'Tanggal'),
-                  validator: (value) => value!.isEmpty ? 'Tanggal harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Tanggal harus diisi' : null,
                 ),
               ],
             ),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
+            onPressed: () async {
+              if (!formKey.currentState!.validate()) return;
+
+              double quantity;
+              double price;
+              try {
+                quantity = double.parse(
+                  quantityController.text.replaceAll(',', '.').trim(),
+                );
+                price = double.parse(
+                  priceController.text.replaceAll(',', '.').trim(),
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Jumlah dan Harga harus berupa angka'),
+                  ),
+                );
+                return;
+              }
+
+              try {
                 final feed = Feed(
                   id: '',
                   name: nameController.text,
                   type: typeController.text,
-                  quantity: double.parse(quantityController.text),
+                  quantity: quantity,
                   unit: unitController.text,
-                  price: double.parse(priceController.text),
+                  price: price,
                   date: dateController.text,
                 );
-                feedProvider.addFeed(feed);
+                await feedProvider.addFeed(feed);
+                if (!context.mounted) return;
                 Navigator.pop(context);
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Gagal menyimpan pakan: $e')),
+                );
               }
             },
             child: const Text('Simpan'),
@@ -243,18 +328,22 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
     );
   }
 
-  Widget _buildSummaryCard(String title, String value, IconData icon, Color color) {
+  Widget _buildSummaryCard(
+    String title,
+    String value,
+    IconData icon,
+    [Color? color]
+  ) {
+    final col = color ?? AppTheme.primaryGreen;
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [color.withValues(alpha: 0.7), color],
+            colors: [col.withOpacity(0.7), col],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -265,7 +354,11 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Text(
               title,
@@ -284,14 +377,13 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Filter Pakan'),
         content: DropdownButtonFormField<String>(
-          value: _filterType,
+          initialValue: _filterType,
           decoration: const InputDecoration(labelText: 'Tipe Pakan'),
           items: [
             const DropdownMenuItem(value: 'all', child: Text('Semua Tipe')),
-            ...feedTypes.map((type) => DropdownMenuItem(
-                  value: type,
-                  child: Text(type),
-                )),
+            ...feedTypes.map(
+              (type) => DropdownMenuItem(value: type, child: Text(type)),
+            ),
           ],
           onChanged: (value) => setState(() => _filterType = value ?? 'all'),
         ),
@@ -335,7 +427,8 @@ class _FeedManagementScreenState extends State<FeedManagementScreen> {
             CheckboxListTile(
               title: const Text('Urutkan Naik'),
               value: _sortAscending,
-              onChanged: (value) => setState(() => _sortAscending = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _sortAscending = value ?? false),
             ),
           ],
         ),

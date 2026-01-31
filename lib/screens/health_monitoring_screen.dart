@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 import '../providers/health_provider.dart';
 import '../models/health_monitoring.dart';
 
@@ -27,13 +28,13 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Normal':
-        return Colors.green;
+        return AppTheme.statusHealthy;
       case 'Baik':
-        return Colors.blue;
+        return AppTheme.statusModerate;
       case 'Buruk':
-        return Colors.red;
+        return AppTheme.statusUnhealthy;
       default:
-        return Colors.grey;
+        return AppTheme.textLight;
     }
   }
 
@@ -44,8 +45,10 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
 
     // Apply filtering
     var filteredMonitorings = monitorings.where((monitoring) {
-      bool statusMatch = _filterStatus == 'all' || monitoring.status == _filterStatus;
-      bool parameterMatch = _filterParameter == 'all' || monitoring.parameter == _filterParameter;
+      bool statusMatch =
+          _filterStatus == 'all' || monitoring.status == _filterStatus;
+      bool parameterMatch =
+          _filterParameter == 'all' || monitoring.parameter == _filterParameter;
       return statusMatch && parameterMatch;
     }).toList();
 
@@ -68,9 +71,15 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
 
     // Calculate health statistics
     int totalRecords = filteredMonitorings.length;
-    int healthyRecords = filteredMonitorings.where((m) => m.status == 'Normal').length;
-    int goodRecords = filteredMonitorings.where((m) => m.status == 'Baik').length;
-    int poorRecords = filteredMonitorings.where((m) => m.status == 'Buruk').length;
+    int healthyRecords = filteredMonitorings
+        .where((m) => m.status == 'Normal')
+        .length;
+    int goodRecords = filteredMonitorings
+        .where((m) => m.status == 'Baik')
+        .length;
+    int poorRecords = filteredMonitorings
+        .where((m) => m.status == 'Buruk')
+        .length;
 
     // Generate alerts
     List<String> alerts = [];
@@ -84,7 +93,6 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Monitoring Kesehatan'),
-        backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -103,16 +111,18 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                 // Health alerts
                 if (alerts.isNotEmpty)
                   Container(
-                    color: Colors.red.shade100,
+                    color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                     padding: const EdgeInsets.all(8),
                     child: Row(
                       children: [
-                        const Icon(Icons.warning, color: Colors.red),
+                        Icon(Icons.warning,
+                            color: Theme.of(context).colorScheme.error),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             alerts.join('. '),
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
                           ),
                         ),
                       ],
@@ -127,11 +137,20 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Total Rekam', totalRecords.toString(), Icons.health_and_safety, Colors.blue),
+                            child: _buildSummaryCard(
+                                'Total Rekam',
+                                totalRecords.toString(),
+                                Icons.health_and_safety,
+                              ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _buildSummaryCard('Kesehatan Normal', healthyRecords.toString(), Icons.check_circle, Colors.green),
+                            child: _buildSummaryCard(
+                              'Kesehatan Normal',
+                              healthyRecords.toString(),
+                              Icons.check_circle,
+                              AppTheme.statusHealthy,
+                            ),
                           ),
                         ],
                       ),
@@ -139,11 +158,20 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildSummaryCard('Kesehatan Baik', goodRecords.toString(), Icons.thumb_up, Colors.lightGreen),
+                            child: _buildSummaryCard(
+                              'Kesehatan Baik',
+                              goodRecords.toString(),
+                              Icons.thumb_up,
+                            ),
                           ),
                           const SizedBox(width: 16),
-                            Expanded(
-                            child: _buildSummaryCard('Perlu Perhatian', poorRecords.toString(), Icons.warning, Colors.red),
+                          Expanded(
+                            child: _buildSummaryCard(
+                              'Perlu Perhatian',
+                              poorRecords.toString(),
+                              Icons.warning,
+                              AppTheme.statusUnhealthy,
+                            ),
                           ),
                         ],
                       ),
@@ -162,63 +190,72 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                         curve: Curves.easeInOut,
                         margin: const EdgeInsets.only(bottom: 16),
                         child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      leading: CircleAvatar(
-                        backgroundColor: _getStatusColor(monitoring.status).withValues(alpha: 0.2),
-                        child: Icon(
-                          Icons.health_and_safety,
-                          color: _getStatusColor(monitoring.status),
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(16),
+                            leading: CircleAvatar(
+                              backgroundColor:
+                                  _getStatusColor(monitoring.status).withOpacity(0.12),
+                              child: Icon(
+                                Icons.health_and_safety,
+                                color: _getStatusColor(monitoring.status),
+                              ),
+                            ),
+                            title: Text(
+                              '${monitoring.parameter}: ${monitoring.value}',
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Kolam: ${monitoring.pondId}'),
+                                Text('Status: ${monitoring.status}'),
+                                Text('Tanggal: ${monitoring.date}'),
+                                Text('Catatan: ${monitoring.notes}'),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete,
+                                  color: Theme.of(context).colorScheme.error),
+                              onPressed: () {
+                                provider.deleteMonitoring(monitoring.id);
+                              },
+                            ),
+                            onTap: () {
+                              // Edit functionality can be added here
+                            },
+                          ),
                         ),
-                      ),
-                      title: Text('${monitoring.parameter}: ${monitoring.value}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Kolam: ${monitoring.pondId}'),
-                          Text('Status: ${monitoring.status}'),
-                          Text('Tanggal: ${monitoring.date}'),
-                          Text('Catatan: ${monitoring.notes}'),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          provider.deleteMonitoring(monitoring.id);
-                        },
-                      ),
-                      onTap: () {
-                        // Edit functionality can be added here
-                      },
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddHealthDialog(context, provider);
         },
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddHealthDialog(BuildContext context, HealthProvider healthProvider) {
+  void _showAddHealthDialog(
+    BuildContext context,
+    HealthProvider healthProvider,
+  ) {
     final formKey = GlobalKey<FormState>();
     final parameterController = TextEditingController();
     final valueController = TextEditingController();
     final pondIdController = TextEditingController();
     final statusController = TextEditingController();
-    final dateController = TextEditingController(text: DateTime.now().toString().split(' ')[0]);
+    final dateController = TextEditingController(
+      text: DateTime.now().toString().split(' ')[0],
+    );
     final notesController = TextEditingController();
 
     showDialog(
@@ -234,28 +271,33 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                 TextFormField(
                   controller: parameterController,
                   decoration: const InputDecoration(labelText: 'Parameter'),
-                  validator: (value) => value!.isEmpty ? 'Parameter harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Parameter harus diisi' : null,
                 ),
                 TextFormField(
                   controller: valueController,
                   decoration: const InputDecoration(labelText: 'Nilai'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value!.isEmpty ? 'Nilai harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Nilai harus diisi' : null,
                 ),
                 TextFormField(
                   controller: pondIdController,
                   decoration: const InputDecoration(labelText: 'ID Kolam'),
-                  validator: (value) => value!.isEmpty ? 'ID Kolam harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'ID Kolam harus diisi' : null,
                 ),
                 TextFormField(
                   controller: statusController,
                   decoration: const InputDecoration(labelText: 'Status'),
-                  validator: (value) => value!.isEmpty ? 'Status harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Status harus diisi' : null,
                 ),
                 TextFormField(
                   controller: dateController,
                   decoration: const InputDecoration(labelText: 'Tanggal'),
-                  validator: (value) => value!.isEmpty ? 'Tanggal harus diisi' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Tanggal harus diisi' : null,
                 ),
                 TextFormField(
                   controller: notesController,
@@ -266,7 +308,10 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
@@ -290,18 +335,22 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
     );
   }
 
-  Widget _buildSummaryCard(String title, String value, IconData icon, Color color) {
+  Widget _buildSummaryCard(
+    String title,
+    String value,
+    IconData icon,
+    [Color? color]
+  ) {
+    final col = color ?? AppTheme.primaryGreen;
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(
-            colors: [color.withValues(alpha: 0.7), color],
+            colors: [col.withOpacity(0.7), col],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -312,7 +361,11 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Text(
               title,
@@ -326,7 +379,9 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
 
   void _showFilterDialog(BuildContext context, List monitorings) {
     Set<String> statuses = monitorings.map((m) => m.status as String).toSet();
-    Set<String> parameters = monitorings.map((m) => m.parameter as String).toSet();
+    Set<String> parameters = monitorings
+        .map((m) => m.parameter as String)
+        .toSet();
 
     showDialog(
       context: context,
@@ -336,28 +391,35 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: _filterStatus,
+              initialValue: _filterStatus,
               decoration: const InputDecoration(labelText: 'Status'),
               items: [
-                const DropdownMenuItem(value: 'all', child: Text('Semua Status')),
-                ...statuses.map((status) => DropdownMenuItem(
-                      value: status,
-                      child: Text(status),
-                    )),
+                const DropdownMenuItem(
+                  value: 'all',
+                  child: Text('Semua Status'),
+                ),
+                ...statuses.map(
+                  (status) =>
+                      DropdownMenuItem(value: status, child: Text(status)),
+                ),
               ],
-              onChanged: (value) => setState(() => _filterStatus = value ?? 'all'),
+              onChanged: (value) =>
+                  setState(() => _filterStatus = value ?? 'all'),
             ),
             DropdownButtonFormField<String>(
-              value: _filterParameter,
+              initialValue: _filterParameter,
               decoration: const InputDecoration(labelText: 'Parameter'),
               items: [
-                const DropdownMenuItem(value: 'all', child: Text('Semua Parameter')),
-                ...parameters.map((param) => DropdownMenuItem(
-                      value: param,
-                      child: Text(param),
-                    )),
+                const DropdownMenuItem(
+                  value: 'all',
+                  child: Text('Semua Parameter'),
+                ),
+                ...parameters.map(
+                  (param) => DropdownMenuItem(value: param, child: Text(param)),
+                ),
               ],
-              onChanged: (value) => setState(() => _filterParameter = value ?? 'all'),
+              onChanged: (value) =>
+                  setState(() => _filterParameter = value ?? 'all'),
             ),
           ],
         ),
@@ -401,7 +463,8 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
             CheckboxListTile(
               title: const Text('Urutkan Naik'),
               value: _sortAscending,
-              onChanged: (value) => setState(() => _sortAscending = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _sortAscending = value ?? false),
             ),
           ],
         ),

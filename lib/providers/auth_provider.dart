@@ -58,7 +58,10 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       await result.user!.updateDisplayName(name);
       if (_user != null) {
         await _saveUserToPrefs(_user!.uid);

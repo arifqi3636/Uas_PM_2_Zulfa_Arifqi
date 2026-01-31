@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 import 'fish_inventory_screen.dart';
 import 'feed_management_screen.dart';
 import 'health_monitoring_screen.dart';
@@ -13,7 +14,6 @@ class MonitoringScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Monitoring'),
-        backgroundColor: Colors.teal,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -35,59 +35,58 @@ class MonitoringScreen extends StatelessWidget {
                     context,
                     'Inventory Ikan',
                     Icons.inventory,
-                    Colors.blue,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const FishInventoryScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const FishInventoryScreen(),
+                      ),
                     ),
                   ),
                   _buildMonitoringCard(
                     context,
                     'Manajemen Pakan',
                     Icons.restaurant,
-                    Colors.green,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const FeedManagementScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const FeedManagementScreen(),
+                      ),
                     ),
                   ),
                   _buildMonitoringCard(
                     context,
                     'Monitoring Kesehatan',
                     Icons.health_and_safety,
-                    Colors.orange,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HealthMonitoringScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const HealthMonitoringScreen(),
+                      ),
                     ),
                   ),
                   _buildMonitoringCard(
                     context,
                     'Data Pemberian Pakan',
                     Icons.restaurant_menu,
-                    Colors.teal,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const FeedingDataScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const FeedingDataScreen(),
+                      ),
                     ),
                   ),
                   _buildMonitoringCard(
                     context,
                     'Data Panen',
                     Icons.agriculture,
-                    Colors.purple,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HarvestDataScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const HarvestDataScreen(),
+                      ),
                     ),
                   ),
-                  _buildMonitoringCard(
-                    context,
-                    'Sensor Data',
-                    Icons.sensors,
-                    Colors.red,
-                    () => _showSensorData(context),
-                  ),
+                  // Sensor data feature removed
                 ],
               ),
             ),
@@ -97,15 +96,19 @@ class MonitoringScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMonitoringCard(BuildContext context, String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildMonitoringCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    VoidCallback onTap, [
+    Color color = AppTheme.primaryGreen,
+  ]) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: Card(
         elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
@@ -113,7 +116,7 @@ class MonitoringScreen extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
-                colors: [color.withValues(alpha: 0.7), color],
+                colors: [color.withOpacity(0.7), color],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -142,19 +145,5 @@ class MonitoringScreen extends StatelessWidget {
     );
   }
 
-  void _showSensorData(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sensor Data'),
-        content: const Text('Fitur sensor data akan ditampilkan di sini.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
+  // Sensor data UI removed
 }

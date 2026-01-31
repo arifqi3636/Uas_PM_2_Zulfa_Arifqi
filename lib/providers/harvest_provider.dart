@@ -15,7 +15,9 @@ class HarvestProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('harvests').get();
-      _harvests = snapshot.docs.map((doc) => Harvest.fromMap(doc.data(), doc.id)).toList();
+      _harvests = snapshot.docs
+          .map((doc) => Harvest.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -26,7 +28,9 @@ class HarvestProvider with ChangeNotifier {
 
   Future<void> addHarvest(Harvest harvest) async {
     try {
-      final docRef = await _firestore.collection('harvests').add(harvest.toMap());
+      final docRef = await _firestore
+          .collection('harvests')
+          .add(harvest.toMap());
       harvest.id = docRef.id;
       _harvests.add(harvest);
       notifyListeners();
@@ -37,7 +41,10 @@ class HarvestProvider with ChangeNotifier {
 
   Future<void> updateHarvest(Harvest harvest) async {
     try {
-      await _firestore.collection('harvests').doc(harvest.id).update(harvest.toMap());
+      await _firestore
+          .collection('harvests')
+          .doc(harvest.id)
+          .update(harvest.toMap());
       final index = _harvests.indexWhere((h) => h.id == harvest.id);
       if (index != -1) {
         _harvests[index] = harvest;

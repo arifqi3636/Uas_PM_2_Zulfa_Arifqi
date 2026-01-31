@@ -15,7 +15,9 @@ class FeedProvider with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('feeds').get();
-      _feeds = snapshot.docs.map((doc) => Feed.fromMap(doc.data(), doc.id)).toList();
+      _feeds = snapshot.docs
+          .map((doc) => Feed.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       // Handle error
     } finally {
@@ -31,7 +33,8 @@ class FeedProvider with ChangeNotifier {
       _feeds.add(feed);
       notifyListeners();
     } catch (e) {
-      // Handle error
+      // Rethrow so callers can react to failures
+      rethrow;
     }
   }
 

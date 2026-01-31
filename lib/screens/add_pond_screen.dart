@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/pond_provider.dart';
 import '../models/pond.dart';
@@ -17,6 +20,8 @@ class _AddPondScreenState extends State<AddPondScreen> {
   final _widthController = TextEditingController();
   final _depthController = TextEditingController();
   String _status = 'healthy';
+  String? _imagePath;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void dispose() {
@@ -27,28 +32,63 @@ class _AddPondScreenState extends State<AddPondScreen> {
     super.dispose();
   }
 
-  void _savePond() {
-    if (_formKey.currentState!.validate()) {
-      final pond = Pond(
-        id: DateTime.now().toString(),
-        name: _nameController.text,
-        length: double.parse(_lengthController.text),
-        width: double.parse(_widthController.text),
-        depth: double.parse(_depthController.text),
-        status: _status,
-        imageUrl: 'assets/images/pond1.jpg', // Default image
+  Future<void> _pickImage() async {
+    try {
+      final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        setState(() {
+          _imagePath = picked.path;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memilih gambar: $e')),
       );
-      Provider.of<PondProvider>(context, listen: false).addPond(pond);
+    }
+  }
+
+  Future<void> _savePond() async {
+    if (!_formKey.currentState!.validate()) return;
+    double length;
+    double width;
+    double depth;
+    try {
+      length = double.parse(_lengthController.text);
+      width = double.parse(_widthController.text);
+      depth = double.parse(_depthController.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nilai panjang/ lebar/ kedalaman tidak valid')),
+      );
+      return;
+    }
+
+    final pond = Pond(
+      id: DateTime.now().toString(),
+      name: _nameController.text,
+      length: length,
+      width: width,
+      depth: depth,
+      status: _status,
+      imageUrl: _imagePath ?? 'assets/images/pond1.jpg',
+    );
+
+    try {
+      await Provider.of<PondProvider>(context, listen: false).addPond(pond);
+      if (!mounted) return;
       Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menyimpan kolam: $e')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tambah Kolam'),
-      ),
+      appBar: AppBar(title: const Text('Tambah Kolam')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -104,7 +144,10 @@ class _AddPondScreenState extends State<AddPondScreen> {
                 items: const [
                   DropdownMenuItem(value: 'healthy', child: Text('Sehat')),
                   DropdownMenuItem(value: 'moderate', child: Text('Moderat')),
-                  DropdownMenuItem(value: 'unhealthy', child: Text('Tidak Sehat')),
+                  DropdownMenuItem(
+                    value: 'unhealthy',
+                    child: Text('Tidak Sehat'),
+                  ),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -113,10 +156,30 @@ class _AddPondScreenState extends State<AddPondScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _savePond,
-                child: const Text('Simpan'),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: _imagePath == null
+                        ? const SizedBox(
+                            height: 80,
+                            child: Center(child: Text('Belum ada gambar')),
+                          )
+                        : SizedBox(
+                            height: 80,
+                            child: Image.file(File(_imagePath!), fit: BoxFit.cover),
+                          ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton.icon(
+                    onPressed: _pickImage,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Pilih Gambar'),
+                  ),
+                ],
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(onPressed: _savePond, child: const Text('Simpan')),
             ],
           ),
         ),
